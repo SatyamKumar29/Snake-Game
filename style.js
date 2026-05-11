@@ -19,6 +19,7 @@ highScoreElement.innerText = highScore;
 const cols = Math.floor(board.clientWidth / blockWidth);
 const rows = Math.floor(board.clientHeight / blockHeight);
 let intervalId = null;
+let speed = 200;
 let food = { x: Math.floor(Math.random() * rows), y: Math.floor(Math.random() * cols) }
 
 const blocks = [];
@@ -83,6 +84,10 @@ function render() {
             localStorage.setItem("highScore", highScore.toString());
         }
 
+        speed = Math.max(60, speed-5);
+        clearInterval(intervalId);
+        intervalId = setInterval(render, speed);
+        
         snake.unshift(head);
     }
 
@@ -102,9 +107,10 @@ function render() {
 
 startButton.addEventListener("click",()=>{
     modal.style.display = "none"
+    speed = 200;
     intervalId = setInterval(() => {
     render();
-}, 200);
+}, speed);
 })
 
 restartButton.addEventListener("click", restartGame)
@@ -133,9 +139,13 @@ function restartGame() {
 
 food = { x: Math.floor(Math.random() * rows), y: Math.floor(Math.random() * cols) }
 
-intervalId = setInterval(() => {
-    render();
-}, 200);
+    highScore = localStorage.getItem("highScore") || 0;
+    highScoreElement.innerText = highScore;
+speed = 200;
+
+    intervalId = setInterval(() => {
+        render();
+    }, speed);
 
 score = 0;
 scoreElement.innerText = score;
